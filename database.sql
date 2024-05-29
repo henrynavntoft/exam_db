@@ -138,23 +138,8 @@ SELECT * FROM books_format;
 SELECT * FROM book_authors;
 SELECT * FROM book_categories;
 
--- #################################
--- Joins
 
 
--- Inner join - books and publishers
-SELECT b.book_pk, b.book_name, p.publisher_name 
-FROM books b --alias 
-INNER JOIN publishers p
-ON b.publisher_fk = p.publisher_pk;
-
-
--- Inner and left join - books, publishers and categories
-SELECT b.book_pk, b.book_name, p.publisher_name, c.category_name
-FROM books b
-INNER JOIN publishers p ON b.publisher_fk = p.publisher_pk
-LEFT JOIN book_categories bc ON b.book_pk = bc.book_fk
-LEFT JOIN categories c ON bc.category_fk = c.category_pk;
 
 
 -- #################################
@@ -179,6 +164,11 @@ SELECT books.*
 FROM books
 JOIN books_fts ON books.book_pk = books_fts.book_pk
 WHERE books_fts MATCH 'Gatsby';
+
+
+
+
+
 
 -- #################################
 -- Triggers
@@ -205,6 +195,9 @@ SELECT * FROM books;
 
 
 
+
+
+
 -- #################################
 -- Views
 
@@ -224,6 +217,9 @@ JOIN book_authors ba ON b.book_pk = ba.book_fk
 JOIN authors a ON ba.author_fk = a.author_pk;
 
 SELECT * FROM BookAuthorView;
+
+
+
 
 
 -- #################################
@@ -249,14 +245,38 @@ GROUP BY format_type
 HAVING book_count > 1;
 
 
--- #################################
--- Other joins
 
--- Cross join - Combine all books with all authors
+
+
+-- #################################
+-- Native SQLite joins
+
+-- Inner join - Combines rows from books and publishers where the publisher_fk in books matches the publisher_pk in publishers. Only rows with matching values in both tables are returned.
+SELECT b.book_pk, b.book_name, p.publisher_name 
+FROM books b --alias 
+INNER JOIN publishers p
+ON b.publisher_fk = p.publisher_pk;
+
+
+-- Left join - Combines all rows from books with the matching rows from publishers. If there is no match, the result is NULL on the right side.
+SELECT b.book_name, p.publisher_name
+FROM books b
+LEFT JOIN publishers p
+ON b.publisher_fk = p.publisher_pk;
+
+-- Cross join - Combines all rows from books with all rows from authors, resulting in a Cartesian product. Every possible combination of book_name and author_name is returned.
 SELECT b.book_name, a.author_name  
 FROM books b
 CROSS JOIN authors a;
 
+
+
+
+
+
+
+-- #################################
+-- Other joins - simulated in SQLite
 
 -- Simulated RIGHT JOIN - Finding all authors and their books, ensuring all authors are listed even if they have no books.
 SELECT a.author_name, b.book_name
