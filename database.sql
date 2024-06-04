@@ -303,3 +303,23 @@ JOIN books b2 ON b1.publisher_fk = b2.publisher_fk AND b1.book_pk != b2.book_pk
 JOIN publishers p ON b1.publisher_fk = p.publisher_pk;
 
 
+
+
+-- ################################# NOTES
+-- Simple order by
+SELECT * FROM books 
+ORDER BY book_name;
+
+-- Order by with direction and limit
+SELECT * FROM books
+ORDER BY book_name ASC LIMIT 0,1;
+
+-- Like wildcard search
+SELECT * FROM books
+WHERE book_name LIKE '%kingbird%';
+
+-- Greater or less than or equal to
+SELECT * FROM books
+WHERE book_version = 1;
+
+
