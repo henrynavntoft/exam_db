@@ -23,6 +23,13 @@ INSERT INTO books VALUES
 ("3", "2", "1984", 1, CURRENT_TIMESTAMP),
 ("4", "2", "Animal Farm", 1, CURRENT_TIMESTAMP);
 
+
+-- Testing null values
+INSERT INTO books VALUES 
+("5", null, null, null, null);
+
+DELETE FROM books WHERE book_pk = "5";
+
 -- #################################
 -- Primary table
 
@@ -210,7 +217,7 @@ SELECT * FROM books;
 
 
 -- #################################
--- Views
+-- Views - virtual tables that combine data from multiple tables, good for simplifying complex queries
 
 -- Create a view that combines the books and publishers tables
 CREATE VIEW IF NOT EXISTS BookPublisherView AS
@@ -332,8 +339,19 @@ WHERE book_name LIKE '%kingbird%';
 
 -- Greater or less than or equal to
 SELECT * FROM books
-WHERE book_version = 1;
+WHERE book_version <= 1;
 
 
 
+-- Easiest joins
+SELECT * FROM books
+INNER JOIN publishers
+ON books.publisher_fk = publishers.publisher_pk;
+
+SELECT * FROM books
+LEFT JOIN publishers
+ON books.publisher_fk = publishers.publisher_pk;
+
+SELECT * FROM books
+CROSS JOIN publishers;
 
