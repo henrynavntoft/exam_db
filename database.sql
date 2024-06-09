@@ -19,7 +19,9 @@ CREATE TABLE books(
 
 INSERT INTO books VALUES
 ("1", "1", "The Great Gatsby", 1, CURRENT_TIMESTAMP),
-("2", "1", "To Kill a Mockingbird", 1, CURRENT_TIMESTAMP);
+("2", "1", "To Kill a Mockingbird", 1, CURRENT_TIMESTAMP),
+("3", "2", "1984", 1, CURRENT_TIMESTAMP),
+("4", "2", "Animal Farm", 1, CURRENT_TIMESTAMP);
 
 -- #################################
 -- Primary table
@@ -50,7 +52,8 @@ CREATE TABLE authors (
 
 INSERT INTO authors VALUES
 ("1", "F. Scott Fitzgerald"),
-("2", "Harper Lee");
+("2", "Harper Lee"),
+("3", "George Orwell");
 
 
 -- #################################
@@ -86,7 +89,11 @@ INSERT INTO books_format VALUES
 ("1", "Paperback"),
 ("1", "Ebook"),
 ("2", "Hardcover"),
-("2", "Paperback");
+("2", "Paperback"),
+("3", "Hardcover"),
+("3", "Ebook"),
+("4", "Hardcover"),
+("4", "Paperback");
 
 
 -- #################################
@@ -104,7 +111,9 @@ CREATE TABLE book_authors (
 
 INSERT INTO book_authors VALUES
 ("1", "1"),
-("2", "2");
+("2", "2"),
+("3", "3"),
+("4", "3");
 
 
 
@@ -123,7 +132,9 @@ CREATE TABLE book_categories (
 
 INSERT INTO book_categories VALUES
 ("1", "1"),
-("2", "1");
+("2", "1"),
+("3", "1"),
+("4", "2");
 
 -- #################################
 
@@ -159,7 +170,7 @@ CREATE VIRTUAL TABLE books_fts USING fts5(
 INSERT INTO books_fts (book_pk, book_name)
 SELECT book_pk, book_name FROM books;
 
--- Perform a full-text search for the term "Gatsby"
+-- Perform a full-text search for the term "Gatsby", books.* is a wildcard that matches all columns
 SELECT books.*
 FROM books
 JOIN books_fts ON books.book_pk = books_fts.book_pk
@@ -237,7 +248,7 @@ FROM books_format
 GROUP BY format_type;
 
 
--- Having - Count the number of books for each format type and filter out those with only 1 book
+-- Having - Count the number of books for each format type and filter out (using having) those with only 1 book
 
 SELECT format_type, COUNT(book_fk) AS book_count
 FROM books_format
@@ -310,11 +321,12 @@ JOIN publishers p ON b1.publisher_fk = p.publisher_pk;
 SELECT * FROM books 
 ORDER BY book_name;
 
--- Order by with direction and limit
+-- Order by with direction, limit and offset
 SELECT * FROM books
-ORDER BY book_name ASC LIMIT 0,1;
+ORDER BY book_pk ASC
+LIMIT 3 OFFSET 1;
 
--- Like wildcard search
+-- Like wildcard search and where clause
 SELECT * FROM books
 WHERE book_name LIKE '%kingbird%';
 
