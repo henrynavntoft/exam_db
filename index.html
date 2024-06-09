@@ -12,7 +12,24 @@
 <body>
     <main>
         <h1>Database Exam</h1>
-        <p>Go to <a href="http://0.0.0.0:8529/_db/_system/_admin/aardvark/index.html">AragoDB Collections</a></p>
+        <p>Go to <a href="http://0.0.0.0:8529/_db/_system/_admin/aardvark/index.html">ArangoDB Collections</a></p>
+        <div>
+            <p><b>Books in SQLite ATM:</b></p>
+            % for book in books:
+            <div>
+                {{book["book_name"]}}
+            </div>
+            % end
+        </div>
+        <div>
+            <p><b>Books in ArangoDB ATM:</b></p>
+            % for book in arango_books:
+            <div>
+                {{book["title"]}}
+            </div>
+            % end
+        </div>
+
     </main>
 </body>
 

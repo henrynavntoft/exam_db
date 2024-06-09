@@ -1,9 +1,7 @@
 from bottle import run, get, response, delete, put, post, request, template, static_file #type: ignore
 import requests
-
-@get("/")
-def _():
-    return template("index.html")
+import sqlite3
+import pathlib
 
 # SERVING STATIC FILES
 ##############################
@@ -17,6 +15,23 @@ def _():
 def _(file_name):
     return static_file(file_name+".js", ".")
 
+
+###########################################################################################
+# SQLite database connection
+
+
+def dict_factory(cursor, row):
+    col_names = [col[0] for col in cursor.description]
+    return {key: value for key, value in zip(col_names, row)}
+
+
+def db_sqlite():
+    try:
+        db = sqlite3.connect(str(pathlib.Path(__file__).parent.resolve())+"/database.db")  
+        db.row_factory = dict_factory
+        return db
+    except Exception as ex:
+        print(ex)
 
 
 ###########################################################################################
@@ -37,6 +52,35 @@ def db_arango(query):
     finally:
         pass
 
+###########################################################################################
+# Home
+
+@get("/")
+def _():
+    try:
+        # Fetch books from SQLite
+        db = db_sqlite()
+        q = db.execute("SELECT * FROM books")
+        books = q.fetchall()
+
+        # Fetch books from ArangoDB
+        arango_books_response = db_arango({
+            "query": "FOR book IN books RETURN book"
+        })
+        arango_books = arango_books_response["result"] if arango_books_response and "result" in arango_books_response else []
+
+        # Render the template with books from both databases
+        return template("index.html", books=books, arango_books=arango_books)
+    
+    except Exception as ex:
+        print(ex)
+    
+    finally:
+        if "db" in locals(): db.close()
+
+
+########################################################################################### 
+# ArangoDB
 # Get all books
 ##############################
 @get("/arangodb/books")

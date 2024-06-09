@@ -259,7 +259,7 @@ ON b.publisher_fk = p.publisher_pk;
 
 
 -- Left join - Combines all rows from books with the matching rows from publishers. If there is no match, the result is NULL on the right side.
-SELECT b.book_name, p.publisher_name
+SELECT b.book_pk, b.book_name, p.publisher_name
 FROM books b
 LEFT JOIN publishers p
 ON b.publisher_fk = p.publisher_pk;
@@ -321,11 +321,6 @@ WHERE book_name LIKE '%kingbird%';
 -- Greater or less than or equal to
 SELECT * FROM books
 WHERE book_version = 1;
-
-
-
-
-
 
 
 

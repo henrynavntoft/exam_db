@@ -4,8 +4,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: hotpink;
-  background-color: beige;
   font-family: "Roboto", sans-serif;
 }
 
@@ -15,5 +13,6 @@ main {
   gap: 1rem;
   justify-content: center;
   align-items: center;
+  text-align: center;
   height: 100vh;
 }
